@@ -7,7 +7,7 @@ public partial class MainPage : ContentPage
     public MainPage()
     {
         InitializeComponent();
-		MainViewModel viewModel = BindingContext as MainViewModel;
+		MainViewModel viewModel = (BindingContext as MainViewModel)!;
 		viewModel.MenuHostingPage = this;
     }
 }

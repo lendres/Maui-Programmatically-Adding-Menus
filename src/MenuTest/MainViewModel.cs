@@ -8,16 +8,16 @@ public partial class MainViewModel : ObservableObject
 	public Page? MenuHostingPage { get;  set; }
 
 	[ObservableProperty]
-	private bool    _canAddFlyoutItem;
+	public partial bool CanAddFlyoutItem { get; set; }
 
 	[ObservableProperty]
-	private bool    _canRemoveFlyoutItem;
+	public partial bool CanRemoveFlyoutItem { get; set; }
 
 	[ObservableProperty]
-	private bool    _canAddFlyoutSubItem;
+	public partial bool CanAddFlyoutSubItem { get; set; }
 
 	[ObservableProperty]
-	private bool    _canRemoveFlyoutSubItem;
+	public partial bool CanRemoveFlyoutSubItem { get; set; }
 
 	public MainViewModel()
     {
@@ -52,7 +52,7 @@ public partial class MainViewModel : ObservableObject
 	}
 
 	[RelayCommand]
-	async void RemoveFlyOutItem()
+	void RemoveFlyOutItem()
 	{
 		MenuBarItem menuBarItem = GetMenuBarItem();
 		var itemToRemove = GetMenuFlyoutItem("Added Item");
@@ -62,14 +62,14 @@ public partial class MainViewModel : ObservableObject
 
 	private MenuBarItem GetMenuBarItem()
 	{
-		return MenuHostingPage.MenuBarItems.ToList().SingleOrDefault(menuBarItem => menuBarItem.Text == "Menu Flyout Item");
+		return MenuHostingPage!.MenuBarItems.ToList().SingleOrDefault(menuBarItem => menuBarItem.Text == "Menu Flyout Item")!;
 	}
 
     public IMenuFlyoutItem? GetMenuFlyoutItem(string name)
     {
         IMenuFlyoutItem? result = null;
 
-        MenuHostingPage.MenuBarItems.ToList().ForEach(menuBarItem =>
+        MenuHostingPage!.MenuBarItems.ToList().ForEach(menuBarItem =>
         {
 			IMenuElement? foundItem = menuBarItem.SingleOrDefault(menuElement => menuElement is MenuFlyoutItem menuItem && menuItem.Text == name);
 
@@ -83,9 +83,9 @@ public partial class MainViewModel : ObservableObject
     }
 
 	[RelayCommand]
-	async void AddFlyOutSubItem()
+	void AddFlyOutSubItem()
 	{
-		MenuFlyoutSubItem menuFlyoutSubItem = GetSubMenu("Flyout");
+		MenuFlyoutSubItem menuFlyoutSubItem = GetSubMenu("Flyout")!;
 
 		MenuFlyoutItem itemToAdd = new()
 		{
@@ -104,10 +104,10 @@ public partial class MainViewModel : ObservableObject
 	}
 
 	[RelayCommand]
-	async void RemoveFlyOutSubItem()
+	void RemoveFlyOutSubItem()
 	{
-		MenuFlyoutSubItem parentSubMenu = GetSubMenu("Flyout");
-		var itemToRemove = GetSubMenuFlyoutItem(parentSubMenu, "Added Sub Item");
+		MenuFlyoutSubItem parentSubMenu = GetSubMenu("Flyout")!;
+		IMenuFlyoutItem itemToRemove = GetSubMenuFlyoutItem(parentSubMenu, "Added Sub Item")!;
 		parentSubMenu.Remove(itemToRemove);
 
 		CanAddFlyoutSubItem = true;
@@ -119,7 +119,7 @@ public partial class MainViewModel : ObservableObject
 	{
 		MenuFlyoutSubItem? result = null;
 
-		MenuHostingPage.MenuBarItems.ToList().ForEach(menuBarItem =>
+		MenuHostingPage!.MenuBarItems.ToList().ForEach(menuBarItem =>
 		{
 			var foundItem = menuBarItem.SingleOrDefault(menuElement => menuElement is MenuFlyoutSubItem subMenu && subMenu.Text == name);
 
